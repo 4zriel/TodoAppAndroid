@@ -1,0 +1,14 @@
+<ActionBar class="action-bar" title="TodoApp">
+</ActionBar>
+<StackLayout class="card" [visibility]="isLoading ? 'collapse' : 'visible'">
+  <Image class="logo" src="~/assets/note.png" width="100" height="100" horizontalAlignment="center"></Image>
+  <StackLayout #container>
+    <TextField #email hint="Email Address" keyboardType="email" [(ngModel)]="user.email" autocorrect="false" autocapitalizationType="none"></TextField>
+    <TextField #password hint="Password" secure="true" [(ngModel)]="user.password"></TextField>
+    <Button #button [text]="isLoggingIn ? 'Login' : 'Register'" class="btn-primary" (tap)="submit()" class="submit-button "></Button>
+    <Button [text]="isLoggingIn ? 'Register' : 'Back to login'" (tap)="toggleDisplay()" class="btn "></Button>
+    <Button horizontalAlignment="center" class="btn" text="Forgot password" (tap)="forgotPassword()" [opacity]="isLoggingIn ? 1 : 0"></Button>
+  </StackLayout>
+</StackLayout>
+<ActivityIndicator [busy]="isLoading" [visibility]="isLoading ? 'visible' : 'collapse'" row="1" horizontalAlignment="center"
+  verticalAlignment="center" style="color: seagreen"></ActivityIndicator>

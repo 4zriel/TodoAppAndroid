@@ -1,0 +1,14 @@
+<GridLayout tkExampleTitle tkToggleNavButton>
+  <RadListView [items]="todoes">
+    <template tkListItemTemplate let-item="item">
+      <GridLayout class="listItemTemplateGrid">
+        <GridLayout verticalAlignment="bottom">
+          <StackLayout class="labelsStackLayout">
+            <Label [text]="item.title"></Label>
+            <Label [text]="item.name"></Label>
+          </StackLayout>
+        </GridLayout>
+      </GridLayout>
+    </template>
+  </RadListView>
+</GridLayout>
