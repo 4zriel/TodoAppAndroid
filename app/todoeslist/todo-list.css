@@ -1,17 +1,49 @@
-RadListView {
-    margin-right: -2;
+.nameLabel {
+    font-size: 20;
+    margin-left: 10;
 }
 
-.listItemTemplateGrid {
+.listItemGridLayout {
+    padding-top: 5;
+    padding-bottom: 5;
+}
+
+.listItemGridLayout StackLayout {
+    vertical-align: center;
+}
+.listItemStackLayout {
     background-color: white;
-    margin-bottom: 2;
-    margin-right: 2;
+    padding-left: 5;
 }
 
-.labelsStackLayout {
-    background-color: rgb(255, 255, 255, 0.7);
-    padding-top: 8;
-    padding-bottom: 8;
-    padding-left: 16;
-    padding-right: 16;
+.labelName {
+    font-size: 20;
+    margin-bottom: 8;
+}
+
+.labelTitle {
+    font-size: 14;
+    font-weight: bold;
+}
+
+.labelText {
+    font-size: 12;
+}
+
+.listItemSwipeGridLayout {
+    background-color: white;
+}
+
+.listItemSwipeGridLayout label {
+    font-size: 20;
+}
+
+.markViewStackLayout {
+    background-color: blue;
+    padding: 16
+}
+
+.deleteViewStackLayout {
+    background-color: red;
+    padding: 16;
 }

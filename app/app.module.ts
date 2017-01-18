@@ -6,7 +6,6 @@ import { NgModule } from "@angular/core";
 import { NativeScriptHttpModule } from "nativescript-angular/http";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
-
 import { LoginComponent } from './login/login.component'
 import { TokenService } from './services/token.service';
 import { CommonService } from './services/common.service';
@@ -22,7 +21,7 @@ import { authProviders, appRoutes } from "./app.routes";
     authProviders
   ],
   declarations: [
-    AppComponent
+    AppComponent    
   ],
   bootstrap: [AppComponent],
   imports: [
