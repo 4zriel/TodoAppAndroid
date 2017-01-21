@@ -1,38 +1,44 @@
-<ActionBar title="My Todoes" icon="" class="action-bar">
+<ActionBar title="My Todoes" class="action-bar">
+  <ActionItem (tap)="add()">
+    <Button text="&#xf276; add" class="material-icon action-item"></Button>
+  </ActionItem>
   <ActionItem (tap)="logout()">
-    <Button text="Logout" class="action-item"></Button>
+    <Button text="&#xf1af; logout" class="material-icon action-item"></Button>
   </ActionItem>
 </ActionBar>
-<GridLayout>
-  <RadListView id="listView" [items]="todoes" itemSwipe="true" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)"
-    (itemSwipeProgressChanged)="onCellSwiping($event)" (itemSwipeProgressEnded)="onSwipeCellFinished($event)" (itemTap)="onItemClick($event)"
-    itemReorder="true" (itemReordered)="onItemReordered($event)">
+<GridLayout orientation="vertical" rows="auto, *">
+  <RadListView id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" (itemTap)="onItemClick($event)"
+    (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)" reorderMode="Drag">
     <template tkListItemTemplate let-item="item">
-      <StackLayout class="listItemStackLayout" orientation="vertical">
-        <Label class="labelName" [text]="item.name"></Label>
-        <Label class="labelTitle" [text]="item.title"></Label>
-        <Label class="labelText" [text]="item.text"></Label>
-      </StackLayout>
-      <!--<ReorderHandle col="1" verticalAlignment="center">
-        <Image src="~/resources/reordericon.png" class="handleImage" stretch="none" verticalAlignment="stretch"></Image>
-      </ReorderHandle>-->
+      <GridLayout columns="auto, *, auto" class="listItemGridLayout">
+        <label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listButton"></label>
+        <GridLayout class="listItemStackLayout" col="1" columns="auto, *" rows="auto,*">
+          <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="40" height="40"
+            row="0" [src]="item.imagepath "></Image>
+            <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="listButton material-icon "></Label>
+            <Label row="0" col="1" verticalAlignment="center" class="labelName" [text]="item.name"></Label>
+        </GridLayout>
+        <ReorderHandle col="2 " verticalAlignment="center">
+          <Label text="&#xf197;" style="padding-right: 10" class="material-icon"></Label>
+        </ReorderHandle>
+      </GridLayout>
     </template>
     <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="listItemSwipeGridLayout">
       <StackLayout id="mark-view" class="markViewStackLayout" col="0" (tap)="onLeftSwipeClick($event)">
-        <Label text="mark" verticalAlignment="center" horizontalAlignment="center"></Label>
+        <label text="&#xf269;" class="material-icon listButton"></label>
       </StackLayout>
-      <StackLayout id="delete-view" class="deleteViewStackLayout" col="2" (tap)="onRightSwipeClick($event)">
-        <Label text="delete" verticalAlignment="center" horizontalAlignment="center"></Label>
+      <StackLayout id="delete-view" class="deleteViewStackLayout " col="2 ">
+        <label text="&#xf154;" class="material-icon listButton"></label>
       </StackLayout>
     </GridLayout>
-    <template tkListViewHeader>
-      <GridLayout backgroundColor="#65a565">
-        <Label text="This is the list header"></Label>
+    <!--<template tkListViewHeader>
+      <GridLayout>
+        <Label text="Todo List: "></Label>
       </GridLayout>
-    </template>
+    </template>-->
     <template tkListViewFooter>
-      <GridLayout backgroundColor="#7fff7f">
-        <Label text="This is the list footer"></Label>
+      <GridLayout>
+        <Label text="Count: {{todoes.length}}"></Label>
       </GridLayout>
     </template>
     </RadListView>

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CommonService } from './common.service';
 import 'rxjs/add/operator/share';
+import * as dialogs from "ui/dialogs";
 
 @Injectable()
 export class FirebaseService {
@@ -23,14 +24,13 @@ export class FirebaseService {
     return firebase.createUser({
       email: user.email,
       password: user.password
-    }).then(
-      function (result: any) {
-        return JSON.stringify(result);
-      },
-      function (errorMessage: any) {
-        alert(errorMessage);
-      }
-      )
+    }).then((result: any) => {
+      firebase.sendEmailVerification();
+      this.confirmHandler('Please cheack Your email to verified your account');
+      return JSON.stringify(result);
+    }, errorMessage => {
+      this.alertHandler(errorMessage);
+    })
   }
 
   login(user: User) {
@@ -39,11 +39,18 @@ export class FirebaseService {
       email: user.email,
       password: user.password
     }).then((result: any) => {
-      TokenService.token = result.uid;
-      return JSON.stringify(result);
-    }, (errorMessage: any) => {
+      if (result.emailVerified) {
+        TokenService.token = result.uid;
+        return JSON.stringify(result);
+      }
+      else {
+        firebase.sendEmailVerification();
+        this.logout();
+        return this.alertHandler('Please cheack Your email to verified your account');
+      }
+    }, errorMessage => {
       this.alertHandler(errorMessage);
-    });
+    })
   }
 
   logout() {
@@ -55,18 +62,15 @@ export class FirebaseService {
     return firebase.resetPassword({
       email: email
     }).then((result: any) => {
-      this.alertHandler(result);
-    },
-      function (errorMessage: any) {
-        this.alertHandler(errorMessage);
-      }
-      ).catch(this.handleErrors);
+      this.confirmHandler(result);
+    }, errorMessage => {
+      this.alertHandler(errorMessage);
+    }).catch(this.handleErrors);
   }
 
   getTodoList(): Observable<Todo> {
     return new Observable((observer: any) => {
       let path = 'Todos';
-
       let onValueEvent = (snapshot: any) => {
         this.ngZone.run(() => {
           let results = this.handleSnapshot(snapshot.value);
@@ -99,8 +103,7 @@ export class FirebaseService {
           for (let entry in result.properties) {
             observer.next(result.properties[entry]);
           }
-        }
-        );
+        });
     }).share();
   }
 
@@ -134,7 +137,7 @@ export class FirebaseService {
       "/Todos",
       { "name": Todo, "UID": TokenService.token, "date": 0 - Date.now(), "imagepath": "" }
     ).then(
-      function (result: any) {
+      (result: any) => {
         return 'Todo added to your todo-list!';
       },
       function (errorMessage: any) {
@@ -142,19 +145,40 @@ export class FirebaseService {
       });
   }
 
-  editTodo(id: string, description: string, imagepath: string) {
+  editTodo(item: Todo) {
     this.publishUpdates();
-    return firebase.update("/Todos/" + id + "", {
-      description: description,
-      imagepath: imagepath
-    })
+    return firebase.update(`/Todos/${item.id}`,
+      {
+        "name": item.name,
+        "description": item.description,
+        "index": item.index,
+        "done": item.done,
+        "UID": TokenService.token,
+        "date": 0 - Date.now(),
+        "imagepath": item.imagepath
+      }
+    )
       .then(
-      function (result: any) {
+      (result: any) => {
         return 'You have successfully edited this todo!';
-      },
-      function (errorMessage: any) {
-        console.log(errorMessage);
-      });
+      }, errorMessage => {
+        this.alertHandler(errorMessage);
+      })
+  }
+
+  editDone(item: Todo) {
+    this.publishUpdates();
+    return firebase.update(`/Todos/${item.id}`,
+      {
+        "done": item.done
+      }
+    )
+      .then(
+      (result: any) => {
+        return 'You have successfully edited this todo!';
+      }, errorMessage => {
+        this.alertHandler(errorMessage);
+      })
   }
 
   editDescription(id: string, description: string) {
@@ -163,7 +187,7 @@ export class FirebaseService {
       description: description
     })
       .then(
-      function (result: any) {
+      (result: any) => {
         return 'You have successfully edited the description!';
       },
       function (errorMessage: any) {
@@ -196,10 +220,9 @@ export class FirebaseService {
       .then(
       function (url: string) {
         return url;
-      },
-      function (errorMessage: any) {
-        console.log(errorMessage);
-      });
+      }, errorMessage => {
+        this.alertHandler(errorMessage);
+      })
   }
 
   handleErrors(error) {
@@ -208,10 +231,25 @@ export class FirebaseService {
   }
 
   alertHandler(msg: any) {
-    return alert({
+    let options = {
       title: 'Error',
       message: `${msg}`,
       okButtonText: "OK"
-    })
+    };
+    return dialogs.alert(options).then(() => {
+      console.log(`error: ${msg}`);
+    });
+  }
+
+
+  confirmHandler(msg: any) {
+    let options = {
+      title: 'Info',
+      message: `${msg}`,
+      okButtonText: "OK"
+    };
+    return dialogs.confirm(options).then(() => {
+      console.log(`info: ${msg}`);
+    });
   }
 }

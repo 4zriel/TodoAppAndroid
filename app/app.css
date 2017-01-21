@@ -9,3 +9,8 @@ TextField {
   font-size: 13;
 }
 
+.material-icon {
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 22;
+  background-color: rgba(0, 0, 0, 0);
+}

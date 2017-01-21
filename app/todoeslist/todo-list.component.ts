@@ -10,6 +10,7 @@ import { ObservableArray } from "data/observable-array";
 import { ListViewEventData } from "nativescript-telerik-ui/listview";
 import listViewModule = require("nativescript-telerik-ui/listview");
 import * as frameModule from "ui/frame";
+import * as utilsModule from "utils/utils";
 
 @Component({
   moduleId: module.id,
@@ -47,8 +48,20 @@ export class TodoListComponent implements OnInit {
 
   ngOnInit() {
     this.todoes$ = <any>this.firebaseService.getTodoList();
-    this.todoes$.forEach(
-      a => this._todoes.push(a));
+    let subscribe = this.todoes$.subscribe(
+      onValue => {
+        this._todoes = new ObservableArray<Todo>();
+        onValue.forEach(
+          a => this._todoes.push(a));
+        subscribe.unsubscribe();
+      },
+      onError => {
+        this._todoes = new ObservableArray<Todo>();
+        subscribe.unsubscribe();
+      }
+    );
+    // this.todoes$.forEach(
+    //   a => this._todoes.push(a));
     this.message$ = <any>this.firebaseService.getRemote();
   }
 
@@ -89,6 +102,7 @@ export class TodoListComponent implements OnInit {
   public onItemReordered(args: ListViewEventData) {
     console.log("Item reordered. Old index: " + args.itemIndex + " " + "new index: " + args.data.targetIndex);
   }
+
   public onCellSwiping(args: listViewModule.ListViewEventData) {
     var swipeLimits = args.data.swipeLimits;
     var currentItemView = args.object;
@@ -101,34 +115,35 @@ export class TodoListComponent implements OnInit {
     }
   }
 
+  public onSwipeCellFinished(args: listViewModule.ListViewEventData) {
+    this.todo = this._todoes.getItem(args.itemIndex);
+    console.log(this.todo.name);
+  }
+
   public onSwipeCellStarted(args: listViewModule.ListViewEventData) {
     var swipeLimits = args.data.swipeLimits;
     var listView = frameModule.topmost().currentPage.getViewById("listView");
 
-    swipeLimits.threshold = listView.getMeasuredWidth();
-    swipeLimits.left = listView.getMeasuredWidth();
-    swipeLimits.right = listView.getMeasuredWidth();
-  }
-
-  public onSwipeCellFinished(args: listViewModule.ListViewEventData) {
-    if (args.data.x > 200) {
-      console.log("Perform left action");
-    } else if (args.data.x < -200) {
-      console.log("Perform right action");
-    }
+    swipeLimits.threshold = 80 * utilsModule.layout.getDisplayDensity();
+    swipeLimits.left = 120 * utilsModule.layout.getDisplayDensity();
+    swipeLimits.right = 120 * utilsModule.layout.getDisplayDensity();
   }
 
   public onItemClick(args: listViewModule.ListViewEventData) {
     var listView = <listViewModule.RadListView>frameModule.topmost().currentPage.getViewById("listView");
     listView.notifySwipeToExecuteFinished();
-    let todo = this._todoes.getItem(args.itemIndex);
-    this.router.navigate(["/todo", todo.id]);
+    this.todo = this._todoes.getItem(args.itemIndex);
+    this.router.navigate(["/todo", this.todo.id]);
   }
 
   public onLeftSwipeClick(args) {
-  }
-
-  public onRightSwipeClick(args) {
+    var listView = <listViewModule.RadListView>frameModule.topmost().currentPage.getViewById("listView");
+    this.todo.done = !this.todo.done;
+    this.firebaseService.editDone(this.todo)
+      .then(
+      onValue => listView.notifySwipeToExecuteFinished(),
+      onError => listView.notifySwipeToExecuteFinished()
+      );
   }
 }
 

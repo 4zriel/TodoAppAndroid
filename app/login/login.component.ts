@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     private firebaseService: FirebaseService,
     private routerExtensions: RouterExtensions) {
     this.user = new User();
-    this.user.email = "rafalk@gmail.com";
+    this.user.email = "rklosek@gmail.com";
     this.user.password = "123321";
   }
 
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.firebaseService.login(this.user)
       .then(() => {
-        this.isLoading = true;
+        this.isLoading = false;
         this.isAuthenticating = false;
         this.routerExtensions.navigate(["/"], { clearHistory: true });
 

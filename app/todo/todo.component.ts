@@ -101,7 +101,7 @@ export class TodoComponent implements OnInit {
         this.uploadedImageName = uploadedFile.name;
         //get downloadURL and store it as a full path;
         this.firebaseService.getDownloadUrl(this.uploadedImageName).then((downloadUrl: string) => {
-          this.firebaseService.editTodo(id, this.description, downloadUrl).then((result: any) => {
+          this.firebaseService.editTodo(this.todo[0]).then((result: any) => {
             alert(result)
           }, (error: any) => {
             alert(error);
