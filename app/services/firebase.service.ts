@@ -82,10 +82,11 @@ export class FirebaseService {
     }).share();
   }
 
-  getMyTodo(id: string): Observable<any> {
-    return new Observable((observer: any) => {
-      observer.next(this._allItems.filter(s => s.id === id)[0]);
-    }).share();
+  getMyTodo(id: string): Todo {
+    return this._allItems.filter(s => s.id === id)[0];
+    // return new Observable((observer: any) => {
+    //   observer.next(this._allItems.filter(s => s.id === id)[0]);
+    // }).share();
   }
 
   getRemote(): Observable<any> {
@@ -151,10 +152,7 @@ export class FirebaseService {
       {
         "name": item.name,
         "description": item.description,
-        "index": item.index,
-        "done": item.done,
-        "UID": TokenService.token,
-        "date": 0 - Date.now(),
+        "date": item.date.toJSON(),
         "imagepath": item.imagepath
       }
     )

@@ -1,3 +1,4 @@
+import { Todo } from './../models/todo';
 import { FirebaseService } from './../services/firebase.service';
 import { CommonService } from './../services/common.service';
 import { Component, OnInit, NgZone } from '@angular/core';
@@ -23,15 +24,14 @@ var img;
 export class TodoComponent implements OnInit {
   private isLoading: boolean = true;
   id: string;
-  name: string;
-  description: string;
-  imagepath: string;
   image: any;
   private sub: any;
+  public date: Date;
   private imagePath: string;
   private uploadedImageName: string;
   private uploadedImagePath: string;
   public todo: Observable<any>;
+  private innerTodo: Todo = new Todo();
 
   constructor(
     private route: ActivatedRoute,
@@ -45,26 +45,8 @@ export class TodoComponent implements OnInit {
     camera.requestPermissions();
     this.sub = this.route.params.subscribe((params: any) => {
       this.id = params['id'];
-      this.firebaseService.getMyTodo(this.id).subscribe((Todo) => {
-        this.ngZone.run(() => {
-          for (let prop in Todo) {
-            //props
-            if (prop === "id") {
-              this.id = Todo[prop];
-            }
-            if (prop === "name") {
-              this.name = Todo[prop];
-            }
-            if (prop === "description") {
-              this.description = Todo[prop];
-            }
-            if (prop === "imagepath") {
-              this.imagepath = Todo[prop];
-            }
-            this.isLoading = false;
-          }
-        });
-      });
+      this.isLoading = false;
+      this.innerTodo = this.firebaseService.getMyTodo(this.id);
     });
   }
 
@@ -79,7 +61,6 @@ export class TodoComponent implements OnInit {
       .then(imageAsset => {
         imageSource.fromAsset(imageAsset).then(res => {
           this.image = res;
-          //save the source image to a file, then send that file path to firebase
           this.saveToFile(this.image);
         })
       }).catch(function (err) {
@@ -95,13 +76,13 @@ export class TodoComponent implements OnInit {
 
 
   editTodo(id: string) {
+    this.innerTodo.date.setHours(this.date.getUTCHours(), this.date.getUTCMinutes());
     if (this.image) {
-      //upload the file, then save all
       this.firebaseService.uploadFile(this.imagePath).then((uploadedFile: any) => {
         this.uploadedImageName = uploadedFile.name;
-        //get downloadURL and store it as a full path;
         this.firebaseService.getDownloadUrl(this.uploadedImageName).then((downloadUrl: string) => {
-          this.firebaseService.editTodo(this.todo[0]).then((result: any) => {
+          this.innerTodo.imagepath = downloadUrl;
+          this.firebaseService.editTodo(this.innerTodo).then((result: any) => {
             alert(result)
           }, (error: any) => {
             alert(error);
@@ -112,8 +93,7 @@ export class TodoComponent implements OnInit {
       });
     }
     else {
-      //just edit the description
-      this.firebaseService.editDescription(id, this.description).then((result: any) => {
+      this.firebaseService.editTodo(this.innerTodo).then((result: any) => {
         alert(result)
       }, (error: any) => {
         alert(error);

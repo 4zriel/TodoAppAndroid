@@ -1,7 +1,7 @@
 export class Todo {
   public id: string = "";
   public name: string = "";
-  public date: string = "";
+  public date: Date;
   public description: string = "";
   public imagepath: string = "";
   public UID: string = "";
@@ -10,7 +10,7 @@ export class Todo {
   constructor(
     id?: string,
     name?: string,
-    date?: string,
+    date?: Date,
     description?: string,
     imagepath?: string,
     UID?: string,

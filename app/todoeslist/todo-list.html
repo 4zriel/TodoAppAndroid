@@ -1,27 +1,32 @@
 <ActionBar title="My Todoes" class="action-bar">
-  <ActionItem (tap)="add()">
-    <Button text="&#xf276; add" class="material-icon action-item"></Button>
-  </ActionItem>
-  <ActionItem (tap)="logout()">
-    <Button text="&#xf1af; logout" class="material-icon action-item"></Button>
-  </ActionItem>
+  <!--<ActionItem>
+    <Switch text="Show only done" checked="showOnlyDone">
+    </Switch>
+  </ActionItem>-->
+  <ActionItem class="action-item" (tap)="logout()" text="logout" android.position="popup"></ActionItem>
+  <ActionItem class="action-item" (tap)="add()" text="add" android.position="popup"></ActionItem>
+  <ActionItem class="action-item" (tap)="onDelete" text="sort by name" android.position="popup"></ActionItem>
+  <ActionItem *ngIf="!_showOnlyDone" class="action-item" (tap)="showOnlyDone()" text="show only done" android.position="popup"></ActionItem>
+  <ActionItem *ngIf="_showOnlyDone" class="action-item" (tap)="showOnlyDone()" text="show all" android.position="popup"></ActionItem>
 </ActionBar>
 <GridLayout orientation="vertical" rows="auto, *">
-  <RadListView id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" (itemTap)="onItemClick($event)"
-    (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)" reorderMode="Drag">
-    <template tkListItemTemplate let-item="item">
-      <GridLayout columns="auto, *, auto" class="listItemGridLayout">
-        <label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listMaterial"></label>
-        <GridLayout class="listItemStackLayout" col="1" columns="auto, *" rows="auto,*">
-          <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="60" height="60"
-            row="0" [src]="item.imagepath "></Image>
-            <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="material-icon listMaterial"></Label>
-            <Label row="0" col="1" verticalAlignment="center" class="labelName" [text]="item.name"></Label>
-            <Label row="1" col="0" verticalAlignment="center" [text]="item.description"></Label>
-        </GridLayout>
-        <ReorderHandle col="2 " verticalAlignment="center">
-          <Label *ngIf="!isSwipped" text="&#xf197;" style="padding-right: 10" class="material-icon listMaterial"></Label>
-        </ReorderHandle>
+  <RadListView row="1" id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)"
+    (itemTap)="onItemClick($event)" (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)"
+    (itemLoading)="onItemLoading($event)" reorderMode="Drag" itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
+    <template tkListItemTemplate let-item="item" verticalAlignment="center">
+      <GridLayout columns="50, *, auto" class="listItemGridLayout">
+        <Label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listMaterial"
+          style="color: limegreen"></Label>
+          <GridLayout class="listItemStackLayout" col="1" verticalAlignment="center" columns="auto, *" rows="auto,*">
+            <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="60" height="60"
+              row="0" [src]="item.imagepath "></Image>
+              <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="material-icon listMaterial"></Label>
+              <Label row="0" col="1" verticalAlignment="center" class="labelName" [text]="item.name"></Label>
+              <Label row="1" col="0" verticalAlignment="center" [text]="item.description"></Label>
+          </GridLayout>
+          <ReorderHandle col="2 " verticalAlignment="center">
+            <Label *ngIf="!isSwipped" text="&#xf197;" style="padding-right: 10" class="material-icon listMaterial"></Label>
+          </ReorderHandle>
       </GridLayout>
     </template>
     <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="listItemSwipeGridLayout">
@@ -43,5 +48,4 @@
       </GridLayout>
     </template>
     </RadListView>
-    <Fab row="1" (tap)="fabTap" icon="" class="fab-button"></Fab>
 </GridLayout>
