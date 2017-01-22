@@ -11,6 +11,7 @@ import { ListViewEventData } from "nativescript-telerik-ui/listview";
 import listViewModule = require("nativescript-telerik-ui/listview");
 import * as frameModule from "ui/frame";
 import * as utilsModule from "utils/utils";
+import { registerElement } from "nativescript-angular/element-registry";
 
 @Component({
   moduleId: module.id,
@@ -32,6 +33,7 @@ export class TodoListComponent implements OnInit {
   public todoes$: Observable<any>;
   public _todoes: ObservableArray<Todo> = new ObservableArray<Todo>();
   public message$: Observable<any>;
+  public isSwipped = false;
 
   constructor(private routerExtensions: RouterExtensions,
     private firebaseService: FirebaseService,
@@ -47,6 +49,7 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit() {
+    registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
     this.todoes$ = <any>this.firebaseService.getTodoList();
     let subscribe = this.todoes$.subscribe(
       onValue => {
@@ -116,17 +119,18 @@ export class TodoListComponent implements OnInit {
   }
 
   public onSwipeCellFinished(args: listViewModule.ListViewEventData) {
+    this.isSwipped = false;
     this.todo = this._todoes.getItem(args.itemIndex);
     console.log(this.todo.name);
   }
 
   public onSwipeCellStarted(args: listViewModule.ListViewEventData) {
+    this.isSwipped = true;
     var swipeLimits = args.data.swipeLimits;
     var listView = frameModule.topmost().currentPage.getViewById("listView");
-
-    swipeLimits.threshold = 80 * utilsModule.layout.getDisplayDensity();
-    swipeLimits.left = 120 * utilsModule.layout.getDisplayDensity();
-    swipeLimits.right = 120 * utilsModule.layout.getDisplayDensity();
+    swipeLimits.threshold = 60 * utilsModule.layout.getDisplayDensity();
+    swipeLimits.left = 80 * utilsModule.layout.getDisplayDensity();
+    swipeLimits.right = 80 * utilsModule.layout.getDisplayDensity();
   }
 
   public onItemClick(args: listViewModule.ListViewEventData) {
@@ -144,6 +148,18 @@ export class TodoListComponent implements OnInit {
       onValue => listView.notifySwipeToExecuteFinished(),
       onError => listView.notifySwipeToExecuteFinished()
       );
+  }
+
+  public onRightSwipeClick(args) {
+    var listView = <listViewModule.RadListView>frameModule.topmost().currentPage.getViewById("listView");
+    let todoToRemove = this._todoes.indexOf(this.todo);
+    this._todoes.splice(todoToRemove, 1);
+    //this._todoes = new ObservableArray<Todo>(temp);
+    // this.firebaseService.editDone(this.todo)
+    //   .then(
+    //   onValue => listView.notifySwipeToExecuteFinished(),
+    //   onError => listView.notifySwipeToExecuteFinished()
+    //   );
   }
 }
 

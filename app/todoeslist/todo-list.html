@@ -11,15 +11,16 @@
     (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)" reorderMode="Drag">
     <template tkListItemTemplate let-item="item">
       <GridLayout columns="auto, *, auto" class="listItemGridLayout">
-        <label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listButton"></label>
+        <label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listMaterial"></label>
         <GridLayout class="listItemStackLayout" col="1" columns="auto, *" rows="auto,*">
-          <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="40" height="40"
+          <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="60" height="60"
             row="0" [src]="item.imagepath "></Image>
-            <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="listButton material-icon "></Label>
+            <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="material-icon listMaterial"></Label>
             <Label row="0" col="1" verticalAlignment="center" class="labelName" [text]="item.name"></Label>
+            <Label row="1" col="0" verticalAlignment="center" [text]="item.description"></Label>
         </GridLayout>
         <ReorderHandle col="2 " verticalAlignment="center">
-          <Label text="&#xf197;" style="padding-right: 10" class="material-icon"></Label>
+          <Label *ngIf="!isSwipped" text="&#xf197;" style="padding-right: 10" class="material-icon listMaterial"></Label>
         </ReorderHandle>
       </GridLayout>
     </template>
@@ -27,7 +28,7 @@
       <StackLayout id="mark-view" class="markViewStackLayout" col="0" (tap)="onLeftSwipeClick($event)">
         <label text="&#xf269;" class="material-icon listButton"></label>
       </StackLayout>
-      <StackLayout id="delete-view" class="deleteViewStackLayout " col="2 ">
+      <StackLayout id="delete-view" class="deleteViewStackLayout " col="2" (tap)="onRightSwipeClick($event)">
         <label text="&#xf154;" class="material-icon listButton"></label>
       </StackLayout>
     </GridLayout>
@@ -42,4 +43,5 @@
       </GridLayout>
     </template>
     </RadListView>
+    <Fab row="1" (tap)="fabTap" icon="" class="fab-button"></Fab>
 </GridLayout>

@@ -20,11 +20,12 @@
 }
 
 .listItemSwipeGridLayout {
-  background-color: white;
+  background-color: transparent;
 }
 
 .listItemSwipeGridLayout label {
   font-size: 20;
+  background-color: transparent;
 }
 
 .markViewStackLayout {
@@ -44,11 +45,11 @@
 }
 
 .listButton {
-  border-color: rgba(0, 0, 0, 0);
-  border-width: 0;
+  font-size: 48;
+  padding: 16;
+}
+
+.listMaterial {
   font-size: 28;
-  padding-top: 8;
-  padding-bottom: 8;
-  padding-left: 26;
-  padding-right: 26;
+  padding: 5
 }
