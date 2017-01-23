@@ -275,11 +275,19 @@ export class TodoListComponent implements OnInit {
   }
 
   public sortDate() {
-    this._todoes.sort(function (a, b) {
+    this._todoes = new ObservableArray<Todo>(this._todoes.sort(function (a, b) {
       return b.date < a.date ? 1
         : b.date > a.date ? -1
           : 0;
-    });
+    }));
+  }
+
+  public sortName() {
+    this._todoes = new ObservableArray<Todo>(this._todoes.sort(function (a, b) {
+      return b.name < a.name ? 1
+        : b.name > a.name ? -1
+          : 0;
+    }));
   }
 }
 
