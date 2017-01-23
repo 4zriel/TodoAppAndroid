@@ -220,19 +220,20 @@ export class TodoListComponent implements OnInit {
   }
 
   public onItemReordered(args: ListViewEventData) {
-    console.log("Item reordered. Old index: " + args.itemIndex + " " + "new index: " + args.data.targetIndex);
+    this.todo = this._todoes.getItem(args.itemIndex);
+    this.todo.index = args.data.targetIndex;
+    this.firebaseService.editIndex(this.todo)
+      .then((result: any) => {
+
+      }, (error: any) => {
+        this.alertHandler(error);
+      });
   }
 
   public onCellSwiping(args: listViewModule.ListViewEventData) {
     var swipeLimits = args.data.swipeLimits;
     var currentItemView = args.object;
     var currentView;
-
-    if (args.data.x > 200) {
-      console.log("Notify perform left action");
-    } else if (args.data.x < -200) {
-      console.log("Notify perform right action");
-    }
   }
 
   public onSwipeCellFinished(args: listViewModule.ListViewEventData) {

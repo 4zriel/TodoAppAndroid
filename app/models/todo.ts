@@ -5,7 +5,7 @@ export class Todo {
   public description: string = "";
   public imagepath: string = "";
   public UID: string = "";
-  public index: number;
+  public index: number ;
   public done: boolean;
   constructor(
     id?: string,

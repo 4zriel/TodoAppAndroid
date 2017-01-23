@@ -2,16 +2,17 @@
 <ScrollView [visibility]="isLoading ? 'collapse' : 'visible'">
   <StackLayout class="card form">
     <Image *ngIf="innerTodo.imagepath" width="100" height="100" [src]="innerTodo.imagepath"></Image>
-    <TextField hint="Name" [text]="name" class="m-t-10 input" [(ngModel)]="innerTodo.name"></TextField>
-    <TextField hint="Description" [text]="description" class="m-t-10 input" [(ngModel)]="innerTodo.description"></TextField>
-    <GridLayout columns="*,*" columns="*,*" class="card form">
-      <DatePicker [(ngModel)]="innerTodo.date"></DatePicker>
-      <TimePicker col="1 " [(ngModel)]="date"></TimePicker>
+    <GridLayout rows="auto, auto" class="card form">
+      <TextField hint="Name" [text]="name" class="m-t-10 input" [(ngModel)]="innerTodo.name"></TextField>
+      <TextField row="1" hint="Description" [text]="description" class="m-t-10 input" [(ngModel)]="innerTodo.description"></TextField>
     </GridLayout>
-    <Image [src]="image"></Image>
-    <GridLayout columns="*,*">
-      <Button col="0" class="btn gold" text="Photo" (tap)="takePhoto()"></Button>
-      <Button col="1" class="btn btn-primary" text="Save" (tap)="editTodo(id)"></Button>
+    <DatePicker [(ngModel)]="innerTodo.date"></DatePicker>
+    <TimePicker col="1 " [(ngModel)]="date"></TimePicker>
+    <!--<Image [src]="image"></Image>-->
+    <GridLayout columns="*,*,*" class="card form">
+      <Button col="0" class="btn gold " text="Photo" (tap)="takePhoto()"></Button>
+      <Button col="1" class="btn gold " text="Remove Photo" (tap)="removePhoto(id)"></Button>
+      <Button col="2" class="btn btn-primary " text="Save" (tap)="editTodo(id)"></Button>
     </GridLayout>
   </StackLayout>
 </ScrollView>

@@ -12,9 +12,9 @@
   <ActionItem *ngIf="_showOnlyDone" class="action-item listMaterial" (tap)="showOnlyDone()" text="show all" android.position="popup"></ActionItem>
 </ActionBar>
 <GridLayout orientation="vertical" rows="auto, *">
-  <RadListView row="1" id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)"
-    (itemTap)="onItemClick($event)" (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)"
-    (itemLoading)="onItemLoading($event)" reorderMode="Drag" itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
+  <RadListView id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" (itemTap)="onItemClick($event)"
+    (itemSwipeProgressEnded)="onSwipeCellFinished($event)" itemReorder="true" (itemReordered)="onItemReordered($event)" (itemLoading)="onItemLoading($event)"
+    reorderMode="Drag" itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
     <template tkListItemTemplate let-item="item" verticalAlignment="center">
       <GridLayout columns="50, *, auto" class="listItemGridLayout">
         <Label text="&#xf269;" *ngIf="item.done" verticalAlignment="center" horizontalAlignment="left" class="material-icon listMaterial"

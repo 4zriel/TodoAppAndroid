@@ -181,19 +181,22 @@ export class FirebaseService {
       })
   }
 
-  editDescription(id: string, description: string) {
+  editIndex(item: Todo) {
     this.publishUpdates();
-    return firebase.update("/Todos/" + id + "", {
-      description: description
-    })
+    return firebase.update(`/Todos/${item.id}`,
+      {
+        "index": item.index
+      }
+    )
       .then(
       (result: any) => {
-        return 'You have successfully edited the description!';
-      },
-      function (errorMessage: any) {
-        console.log(errorMessage);
-      });
+        return 'You have successfully edited this todo!';
+      }, errorMessage => {
+        this.alertHandler(errorMessage);
+      })
   }
+
+
 
   delete(Todo: Todo) {
     return firebase.remove("/Todos/" + Todo.id + "")

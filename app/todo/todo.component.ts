@@ -12,6 +12,7 @@ import * as camera from "nativescript-camera";
 import * as fs from "file-system";
 var imageModule = require("ui/image");
 var img;
+import * as dialogs from "ui/dialogs";
 
 @Component({
   moduleId: module.id,
@@ -72,6 +73,14 @@ export class TodoComponent implements OnInit {
     imgsrc.saveToFile(this.imagePath, enums.ImageFormat.png);
   }
 
+  removePhoto(id: string) {
+    this.innerTodo.imagepath = '';
+    this.firebaseService.editTodo(this.innerTodo).then((result: any) => {
+      this.confirmHandler(result)
+    }, (error: any) => {
+      this.alertHandler(error);
+    });
+  }
 
   editTodo(id: string) {
     this.innerTodo.date.setHours(this.date.getUTCHours(), this.date.getUTCMinutes());
@@ -81,22 +90,44 @@ export class TodoComponent implements OnInit {
         this.firebaseService.getDownloadUrl(this.uploadedImageName).then((downloadUrl: string) => {
           this.innerTodo.imagepath = downloadUrl;
           this.firebaseService.editTodo(this.innerTodo).then((result: any) => {
-            alert(result)
+            this.confirmHandler(result)
           }, (error: any) => {
-            alert(error);
+            this.alertHandler(error);
           });
         })
       }, (error: any) => {
-        alert('File upload error: ' + error);
+        this.alertHandler('File upload error: ' + error);
       });
     }
     else {
       this.firebaseService.editTodo(this.innerTodo).then((result: any) => {
-        alert(result)
+        this.confirmHandler(result)
       }, (error: any) => {
-        alert(error);
+        this.alertHandler(error);
       });
     }
+  }
+
+  alertHandler(msg: any) {
+    let options = {
+      title: 'Error',
+      message: `${msg}`,
+      okButtonText: "OK"
+    };
+    return dialogs.alert(options).then(() => {
+      console.log(`error: ${msg}`);
+    });
+  }
+
+  confirmHandler(msg: any) {
+    let options = {
+      title: 'Info',
+      message: `${msg}`,
+      okButtonText: "OK"
+    };
+    return dialogs.confirm(options).then(() => {
+      console.log(`info: ${msg}`);
+    });
   }
 
 }
