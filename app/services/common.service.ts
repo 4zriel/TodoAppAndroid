@@ -1,4 +1,4 @@
-import {Injectable, Inject} from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import * as fs from 'file-system';
 
 @Injectable()
@@ -12,4 +12,5 @@ export class CommonService {
   public documentsPath(filename: string) {
     return `${fs.knownFolders.documents().path}/${filename}`;
   }
+
 }

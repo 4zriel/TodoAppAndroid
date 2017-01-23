@@ -8,10 +8,8 @@ import * as enums from 'ui/enums';
 import * as imageSource from 'image-source';
 import { isAndroid } from "platform";
 import { View } from "ui/core/view";
-
 import * as camera from "nativescript-camera";
 import * as fs from "file-system";
-
 var imageModule = require("ui/image");
 var img;
 

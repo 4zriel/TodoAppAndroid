@@ -1,11 +1,10 @@
-<ActionBar class="action-bar" title="{{name}}"></ActionBar>
+<ActionBar class="action-bar" title="{{innerTodo.name}}"></ActionBar>
 <ScrollView [visibility]="isLoading ? 'collapse' : 'visible'">
   <StackLayout class="card form">
-    <Label class="h2" [text]="'Todo:' +innerTodo.name+''"></Label>
     <Image *ngIf="innerTodo.imagepath" width="100" height="100" [src]="innerTodo.imagepath"></Image>
     <TextField hint="Name" [text]="name" class="m-t-10 input" [(ngModel)]="innerTodo.name"></TextField>
     <TextField hint="Description" [text]="description" class="m-t-10 input" [(ngModel)]="innerTodo.description"></TextField>
-    <GridLayout columns="80, *, auto" rows="auto, *" class="card form">
+    <GridLayout columns="*,*" columns="*,*" class="card form">
       <DatePicker [(ngModel)]="innerTodo.date"></DatePicker>
       <TimePicker col="1 " [(ngModel)]="date"></TimePicker>
     </GridLayout>

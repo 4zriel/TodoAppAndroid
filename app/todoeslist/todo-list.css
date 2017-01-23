@@ -1,21 +1,25 @@
 .listItemStackLayout {
   padding: 8;
   border-bottom: 1;
-  border-bottom-color: black
+  border-bottom-color: black;
+  color: white;
 }
 
 .labelName {
   font-size: 20;
   margin-bottom: 8;
+  color: white;
 }
 
 .labelTitle {
   font-size: 14;
   font-weight: bold;
+  color: white;
 }
 
 .labelText {
   font-size: 12;
+  color: white;
 }
 
 .listItemSwipeGridLayout {
@@ -46,9 +50,11 @@
 .listButton {
   font-size: 48;
   padding: 16;
+  color: white;
 }
 
 .listMaterial {
   font-size: 28;
-  padding: 5
+  padding: 5;
+  color: white;
 }

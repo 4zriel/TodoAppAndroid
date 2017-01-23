@@ -11,7 +11,8 @@ import { ListViewEventData } from "nativescript-telerik-ui/listview";
 import listViewModule = require("nativescript-telerik-ui/listview");
 import * as frameModule from "ui/frame";
 import * as utilsModule from "utils/utils";
-import dialogs = require("ui/dialogs");
+import * as dialogs from "ui/dialogs";
+import LocalNotifications = require("nativescript-local-notifications");
 
 @Component({
   moduleId: module.id,
@@ -42,6 +43,27 @@ export class TodoListComponent implements OnInit {
     private router: Router
   ) { }
 
+  public notify() {
+    for (let i = 0; i < this._todoes.length; i++) {
+      LocalNotifications.schedule([{
+        id: i,
+        title: 'The title',
+        body: 'The body',
+        at: new Date(new Date().getTime() + (10 * 1000))
+      }]).then(
+        onValue => {
+          console.log("ID's: " + this._todoes.getItem(i).name)
+        },
+        error => {
+          LocalNotifications.cancelAll();
+        })
+    }
+    LocalNotifications.getScheduledIds().then(
+      ids => {
+        console.log("ID's: " + ids);
+      });
+  }
+
   public showOnlyDone() {
     this._showOnlyDone = !this._showOnlyDone;
     if (this._showOnlyDone) {
@@ -67,12 +89,12 @@ export class TodoListComponent implements OnInit {
 
   public onItemLoading(args) {
     if (args.itemIndex % 2 == 0) {
-      args.view.backgroundColor = "#b3ecff";
+      args.view.backgroundColor = "#627B64";
       args.view._subViews[0].fontSize = "40";
       args.view._subViews[1].fontSize = "20";
     }
     else {
-      args.view.backgroundColor = "#ccf2ff";
+      args.view.backgroundColor = "#818E71";
       args.view._subViews[0].fontSize = "40";
       args.view._subViews[1].fontSize = "20";
     }
@@ -86,6 +108,23 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit() {
+    LocalNotifications.getScheduledIds().then(
+      ids => {
+        console.log("ID's: " + ids);
+      });
+    LocalNotifications.addOnMessageReceivedCallback(
+      function (notificationData) {
+        dialogs.alert({
+          title: "Notification received",
+          message: "ID: " + notificationData.id +
+          "\nTitle: " + notificationData.title +
+          "\nBody: " + notificationData.body,
+          okButtonText: "Excellent!"
+        });
+      }
+    ).then(
+      onValue => console.log("should works")
+      );
     this.todoes$ = <any>this.firebaseService.getTodoList();
     let subscribe = this.todoes$.subscribe(
       onValue => {
@@ -99,8 +138,6 @@ export class TodoListComponent implements OnInit {
         subscribe.unsubscribe();
       }
     );
-    // this.todoes$.forEach(
-    //   a => this._todoes.push(a));
     this.message$ = <any>this.firebaseService.getRemote();
   }
 
@@ -235,12 +272,14 @@ export class TodoListComponent implements OnInit {
     let todoToRemove = this._todoes.indexOf(this.todo);
     this._todoes.splice(todoToRemove, 1);
     this.delete(this.todo);
-    //this._todoes = new ObservableArray<Todo>(temp);
-    // this.firebaseService.editDone(this.todo)
-    //   .then(
-    //   onValue => listView.notifySwipeToExecuteFinished(),
-    //   onError => listView.notifySwipeToExecuteFinished()
-    //   );
+  }
+
+  public sortDate() {
+    this._todoes.sort(function (a, b) {
+      return b.date < a.date ? 1
+        : b.date > a.date ? -1
+          : 0;
+    });
   }
 }
 

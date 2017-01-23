@@ -6,7 +6,7 @@ import { AppModule } from "./app.module";
 import { TokenService } from "./services/token.service";
 
 import firebase = require("nativescript-plugin-firebase");
-
+import * as LocalNotifications from "nativescript-local-notifications";
 
 firebase.init({
   //persist should be set to false as otherwise numbers aren't returned during livesync

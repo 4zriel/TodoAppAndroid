@@ -14,7 +14,9 @@ export class FirebaseService {
   constructor(
     private ngZone: NgZone,
     private commons: CommonService
-  ) { }
+  ) {
+
+  }
 
   items: BehaviorSubject<Array<Todo>> = new BehaviorSubject([]);
 

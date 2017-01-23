@@ -5,9 +5,10 @@
   </ActionItem>-->
   <ActionItem class="action-item" (tap)="logout()" text="logout" android.position="popup"></ActionItem>
   <ActionItem class="action-item" (tap)="add()" text="add" android.position="popup"></ActionItem>
-  <ActionItem class="action-item" (tap)="onDelete" text="sort by name" android.position="popup"></ActionItem>
-  <ActionItem *ngIf="!_showOnlyDone" class="action-item" (tap)="showOnlyDone()" text="show only done" android.position="popup"></ActionItem>
-  <ActionItem *ngIf="_showOnlyDone" class="action-item" (tap)="showOnlyDone()" text="show all" android.position="popup"></ActionItem>
+  <ActionItem class="action-item" (tap)="notify()" text="sort by name" android.position="popup"></ActionItem>
+  <ActionItem class="action-item" (tap)="sortDate()" text="sort by date" android.position="popup"></ActionItem>
+  <ActionItem *ngIf="!_showOnlyDone" class="action-item listMaterial" (tap)="showOnlyDone()" text="show only done" android.position="popup"></ActionItem>
+  <ActionItem *ngIf="_showOnlyDone" class="action-item listMaterial" (tap)="showOnlyDone()" text="show all" android.position="popup"></ActionItem>
 </ActionBar>
 <GridLayout orientation="vertical" rows="auto, *">
   <RadListView row="1" id="listView" [items]="todoes" itemSwipe="true" (itemSwipeProgressStarted)="onSwipeCellStarted($event)"

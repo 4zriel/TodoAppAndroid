@@ -7,14 +7,31 @@ declare var UIResponder: any;
 declare var UIStatusBarStyle: any;
 declare var UIApplication: any;
 declare var UIApplicationDelegate: any;
-
+import firebase = require("nativescript-plugin-firebase");
+import LocalNotifications = require("nativescript-local-notifications");
 @Component({
   selector: "my-app",
   template: "<page-router-outlet></page-router-outlet>"
 })
 export class AppComponent {
   constructor() {
-    this.setStatusBarColors()
+    this.setStatusBarColors();
+    application.on(application.suspendEvent, () => {
+      LocalNotifications.schedule([{
+        id: 111,
+        title: 'title',
+        body: 'body',
+        ticker: 'ticker',
+        badge: 1,
+        at: new Date(new Date().getTime() + 5 * 1000)
+      }]).then(
+        () => {
+          console.log("Notification scheduled");
+        },
+        (error) => {
+          console.log("scheduling error: " + error);
+        })
+    });
   }
 
   private setStatusBarColors() {
@@ -33,6 +50,18 @@ export class AppComponent {
             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
       };
+      LocalNotifications.schedule([{
+        id: 8,
+        title: 'The title',
+        body: 'The body',
+        at: new Date(new Date().getTime() + (10 * 1000))
+      }]).then(
+        onValue => {
+          console.log("ID's: ")
+        },
+        error => {
+          LocalNotifications.cancelAll();
+        })
     }
   }
 }
