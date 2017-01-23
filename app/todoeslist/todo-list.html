@@ -8,6 +8,7 @@
   <ActionItem class="action-item" (tap)="sortName()" text="sort by name" android.position="popup"></ActionItem>
   <ActionItem class="action-item" (tap)="sortDate()" text="sort by date" android.position="popup"></ActionItem>
   <ActionItem class="action-item" (tap)="notify()" text="notify" android.position="popup"></ActionItem>
+  <ActionItem class="action-item" (tap)="saveToFile()" text="save to file" android.position="popup"></ActionItem>
   <ActionItem *ngIf="!_showOnlyDone" class="action-item listMaterial" (tap)="showOnlyDone()" text="show only done" android.position="popup"></ActionItem>
   <ActionItem *ngIf="_showOnlyDone" class="action-item listMaterial" (tap)="showOnlyDone()" text="show all" android.position="popup"></ActionItem>
 </ActionBar>
@@ -21,7 +22,7 @@
           style="color: limegreen"></Label>
           <GridLayout class="listItemStackLayout" col="1" verticalAlignment="center" columns="auto, *" rows="auto,*">
             <Image *ngIf="item.imagepath.length>0" class="m-5" verticalAlignment="center" horizontalAlignment="left" width="60" height="60"
-              row="0" [src]="item.imagepath "></Image>
+              col="0" row="0" [src]="item.imagepath "></Image>
               <Label text="&#xf283;" row="0" *ngIf="item.imagepath.length==0" class="material-icon listMaterial"></Label>
               <Label row="0" col="1" verticalAlignment="center" class="labelName" [text]="item.name"></Label>
               <Label row="1" col="0" verticalAlignment="center" [text]="item.description"></Label>
