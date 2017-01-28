@@ -1,8 +1,10 @@
+import { CommonService } from './../services/common.service';
 import { FirebaseService } from './../services/firebase.service';
 import { Todo } from './../models/todo';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Page } from "ui/page";
+import * as enums from 'ui/enums';
 
 import { RouterExtensions } from 'nativescript-angular/router/router-extensions';
 import { Router } from '@angular/router';
@@ -14,7 +16,9 @@ import * as utilsModule from "utils/utils";
 import * as dialogs from "ui/dialogs";
 import LocalNotifications = require("nativescript-local-notifications");
 import fs = require("file-system");
-
+import * as application from "application";
+import * as fileSystem from "file-system";
+declare var android: any;
 @Component({
   moduleId: module.id,
   selector: "todo-list",
@@ -41,7 +45,8 @@ export class TodoListComponent implements OnInit {
 
   constructor(private routerExtensions: RouterExtensions,
     private firebaseService: FirebaseService,
-    private router: Router
+    private router: Router,
+    private commonService: CommonService
   ) { }
 
   public notify() {
@@ -103,9 +108,6 @@ export class TodoListComponent implements OnInit {
 
   public get todoes() {
     return this._todoes;
-  }
-
-  onPullToRefreshInitiated($event) {
   }
 
   ngOnInit() {
@@ -292,22 +294,25 @@ export class TodoListComponent implements OnInit {
     }));
   }
   public saveToFile() {
-    var documents = fs.knownFolders.documents();
-    var file = documents.getFile("NewFileToCreate.txt");
-    console.log(documents.path);
-    var path = fs.path.join(documents.path, "NewFileToCreate.txt");
-    var file = fs.File.fromPath(path);
     let todoesList = new Array<String>();
     for (let i = 0; i < this._todoes.length; i++) {
       todoesList.push(JSON.stringify(this._todoes.getItem(i)));
     }
+    var pathToSave;
+    var androidDownloadsPath = android.os.Environment.getExternalStoragePublicDirectory(
+      android.os.Environment.DIRECTORY_DOWNLOADS).toString();
+    pathToSave = fileSystem.path.join(androidDownloadsPath, "NewFileToCreate.txt");
+    let file = fs.File.fromPath(pathToSave);
+    console.log(file);
+    console.log(file.path);
     file.writeText(todoesList.toString())
-      .then(function () {
-        console.log(todoesList.toString());
+      .then(result => {
+        file.readText().then(res => {
+          console.log("File content: " + res);
+        });
       }, function (error) {
         console.log(error);
       });
   }
-
 }
 
