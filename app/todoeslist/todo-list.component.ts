@@ -296,7 +296,7 @@ export class TodoListComponent implements OnInit {
   public saveToFile() {
     let todoesList = new Array<String>();
     for (let i = 0; i < this._todoes.length; i++) {
-      todoesList.push(JSON.stringify(this._todoes.getItem(i)));
+      todoesList.push((this._todoes.getItem(i).toString()));
     }
     var pathToSave;
     var androidDownloadsPath = android.os.Environment.getExternalStoragePublicDirectory(
