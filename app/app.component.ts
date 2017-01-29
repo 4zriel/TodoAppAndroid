@@ -19,7 +19,6 @@ export class AppComponent {
   constructor() {
     this.setStatusBarColors();
     firebase.init({
-      //persist should be set to false as otherwise numbers aren't returned during livesync
       persist: false,
       storageBucket: 'gs://todoapp-a62ff.appspot.com',
       onAuthStateChanged: (data: any) => {

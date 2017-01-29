@@ -86,9 +86,6 @@ export class FirebaseService {
 
   getMyTodo(id: string): Todo {
     return this._allItems.filter(s => s.id === id)[0];
-    // return new Observable((observer: any) => {
-    //   observer.next(this._allItems.filter(s => s.id === id)[0]);
-    // }).share();
   }
 
   getRemote(): Observable<any> {
@@ -111,7 +108,6 @@ export class FirebaseService {
   }
 
   handleSnapshot(data: any) {
-    //empty array, then refill and filter
     this._allItems = [];
     if (data) {
       for (let id in data) {
@@ -126,7 +122,6 @@ export class FirebaseService {
   }
 
   publishUpdates() {
-    // here, we sort must emit a *new* value (immutability!)
     this._allItems.sort(function (a, b) {
       if (a.date < b.date) return -1;
       if (a.date > b.date) return 1;
