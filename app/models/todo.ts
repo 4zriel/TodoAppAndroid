@@ -5,7 +5,7 @@ export class Todo {
   public description: string = "";
   public imagepath: string = "";
   public UID: string = "";
-  public index: number ;
+  public index: number;
   public done: boolean;
   constructor(
     id?: string,
@@ -18,5 +18,8 @@ export class Todo {
     done?: boolean
   ) {
 
+  }
+  public toString(): string {
+    return `Titile: ${this.name}; Date: ${this.date}; Description: ${this.description}; Already done? ${this.done}`;
   }
 }
